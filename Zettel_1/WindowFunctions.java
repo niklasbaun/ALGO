@@ -11,8 +11,20 @@ public class WindowFunctions {
      * @return The results for each window when sliding one element at a time.
      */
     public static int[] slidingWindowSum(int[] input, int windowSize){
-        //TODO: 1.4 a)
-        return null;
+        //check if the given array has at least windowSize elements
+        if (input.length < windowSize) {
+            throw new IllegalArgumentException("The given array has less elements than the window size.");
+        }
+        //loop through the array and sum up the elements in each window
+        int[] result = new int[input.length - windowSize + 1];
+        for (int i = 0; i < input.length - windowSize + 1; i++) {
+            int sum = 0;
+            for (int j = 0; j < windowSize; j++) {
+                sum += input[i + j];
+            }
+            result[i] = sum;
+        }
+        return result;
     }
 
     /**
@@ -24,8 +36,19 @@ public class WindowFunctions {
      * @return The results for each window when sliding windowSize element at a time.
      */
     public static double[] tumblingWindowAverage(int[] input, int windowSize){
-        //TODO: 1.4 b)
-        return null;
+        //check if even valid
+        if (input.length % windowSize != 0) {
+            throw new IllegalArgumentException("The given array has an invalid number of elements for the given window size.");
+        }
+        //loop through the array and sum up the elements in each window
+        double[] result = new double[input.length / windowSize];
+        for (int i = 0; i < input.length / windowSize; i++) {
+            int sum = 0;
+            for (int j = 0; j < windowSize; j++) {
+                sum += input[i * windowSize + j];
+            }
+            result[i] = (double) sum / windowSize;
+        }
+        return result;
     }
-
 }
