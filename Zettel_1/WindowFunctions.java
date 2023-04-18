@@ -1,5 +1,6 @@
 /**
  * Adaptation from window functions known from stream processing analytics to process arrays in a stream-like fashion.
+ * @author baun, niklas
  */
 public class WindowFunctions {
 
@@ -15,10 +16,13 @@ public class WindowFunctions {
         if (input.length < windowSize) {
             throw new IllegalArgumentException("The given array has less elements than the window size.");
         }
-        //loop through the array and sum up the elements in each window
+        //create result array
         int[] result = new int[input.length - windowSize + 1];
+        //loop through the array and sum up the elements in each window
         for (int i = 0; i < input.length - windowSize + 1; i++) {
+            //var for Sum
             int sum = 0;
+            //sum up the elements in the window
             for (int j = 0; j < windowSize; j++) {
                 sum += input[i + j];
             }
@@ -36,14 +40,16 @@ public class WindowFunctions {
      * @return The results for each window when sliding windowSize element at a time.
      */
     public static double[] tumblingWindowAverage(int[] input, int windowSize){
-        //check if even valid
+        //check if even valid, natural number of windows can be created
         if (input.length % windowSize != 0) {
             throw new IllegalArgumentException("The given array has an invalid number of elements for the given window size.");
         }
-        //loop through the array and sum up the elements in each window
+        //create result array
         double[] result = new double[input.length / windowSize];
+        //loop through the array and get the average of the  elements in each window
         for (int i = 0; i < input.length / windowSize; i++) {
             int sum = 0;
+            //sum up the elements in the window
             for (int j = 0; j < windowSize; j++) {
                 sum += input[i * windowSize + j];
             }

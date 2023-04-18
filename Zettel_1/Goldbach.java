@@ -1,6 +1,7 @@
 /**
  * For a given even integer number n in the proven Goldbach range,
- * the methods in this class can be used to find two prime integer numbers whose sum eqauls n.
+ * the methods in this class can be used to find two prime integer numbers whose sum equals n.
+ * @author baun, niklas
  */
 public class Goldbach {
 
@@ -10,7 +11,7 @@ public class Goldbach {
      * @return A pair of two prime numbers whose sum equals n.
      */
     public Pair<Integer> goldbach(int n) {
-        //Vorbedingung: Zahl muss gerade sein; größer als 2 und sollte kleiner sein a,s 4 * 10^18
+        //Vorbedingung: Zahl muss gerade sein; größer als 2 und sollte kleiner sein als 4 * 10^18
         boolean pre = (n % 2 == 0) && (n > 2) && (n < 4 * Math.pow(10, 18));
 
         //check if the given number is valid
