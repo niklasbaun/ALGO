@@ -66,11 +66,4 @@ public class Goldbach {
         }
         return true;
     }
-
-    public static void main(String[] args) {
-        Goldbach gb = new Goldbach();
-        Pair<Long> p1 = gb.goldbach(1000000L);
-        System.out.println(p1.getElement1());
-        System.out.println(p1.getElement2());
-    }
 }
