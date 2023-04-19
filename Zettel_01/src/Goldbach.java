@@ -47,7 +47,4 @@ public class Goldbach {
         }
         return true;
     }
-
-    //TODO: 1.1 b)+c)
-
 }
