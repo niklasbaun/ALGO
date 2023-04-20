@@ -56,9 +56,11 @@ public class Goldbach {
      * @return true if n is a prime number, false otherwise
      **/
     private static boolean isPrime(long n) {
+        //check if n is a valid input (n > 1)
         if (n <= 1) {
             return false;
         }
+        //walk through all numbers from 2 to n-1 and check if n is divisible by any of them
         for (int i = 2; i < n; i++) {
             if (n % i == 0) {
                 return false;
