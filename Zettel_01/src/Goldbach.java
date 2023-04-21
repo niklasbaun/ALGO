@@ -34,13 +34,9 @@ public class Goldbach {
     public Pair<Long> goldbach(long n) {
 
         boolean pre = pre(n);
-        //check if the given number is valid
-        if (n < 4 || n % 2 != 0) {
-            return null;
-
-        } else if (pre) {
+        if (pre) {
             //check all possible pairs of prime numbers
-            for (long i = 2; i <= n / 2; i++) {
+            for (long i = 2; i <= n/2; i++) {
                 //check if i and n-i are prime
                 //Nachbedingung: 2 Primzahlen, deren Summe gleich der Eingabe ist
                 if (post(n, i)) {

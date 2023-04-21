@@ -16,6 +16,10 @@ public class WindowFunctions {
         if (input.length < windowSize) {
             throw new IllegalArgumentException("The given array has less elements than the window size.");
         }
+        //check if the window even has a size
+        if (windowSize == 0){
+            throw new IllegalArgumentException("The specified window has no size");
+        }
         //create result array
         int[] result = new int[input.length - windowSize + 1];
         //loop through the array and sum up the elements in each window
@@ -40,6 +44,10 @@ public class WindowFunctions {
      * @return The results for each window when sliding windowSize element at a time.
      */
     public static double[] tumblingWindowAverage(int[] input, int windowSize){
+        //check if the window has even a size
+        if (windowSize == 0){
+            throw new IllegalArgumentException("The specified window has no size");
+        }
         //check if even valid, natural number of windows can be created
         if (input.length % windowSize != 0) {
             throw new IllegalArgumentException("The given array has an invalid number of elements for the given window size.");
@@ -53,6 +61,7 @@ public class WindowFunctions {
             for (int j = 0; j < windowSize; j++) {
                 sum += input[i * windowSize + j];
             }
+            //calculate average
             result[i] = (double) sum / windowSize;
         }
         return result;
