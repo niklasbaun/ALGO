@@ -1,6 +1,5 @@
 /**
  * Adaptation from window functions known from stream processing analytics to process arrays in a stream-like fashion.
- * @author baun, niklas
  */
 public class WindowFunctions {
 

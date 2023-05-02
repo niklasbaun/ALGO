@@ -1,7 +1,6 @@
 /**
  * For a given even integer number n in the proven Goldbach range,
  * the methods in this class can be used to find two prime integer numbers whose sum equals n.
- * @author baun, niklas
  */
 public class Goldbach {
 
