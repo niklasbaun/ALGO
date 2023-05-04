@@ -5,5 +5,4 @@ public interface Insert<E extends Comparable<E>>  {
      * @param element The element
      */
     void insertElement(E element);
-
 }
