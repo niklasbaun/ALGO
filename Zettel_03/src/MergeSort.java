@@ -1,15 +1,17 @@
-public class MergeSort {
+public class MergeSort{
+    private static int count;
 
     /**
      * method to sort an array and count the number of inversions
+     * this will count the inversions by using the mergeSort method, which will count some inversions multiple times since
+     * they will be counted for each merge
      * @param array the array to sort and count
      * @return the count of inversions
      */
     public static int sortAndCount(int[] array){
-        // TODO: Aufgabe 3.4 b)
-        int count = 0;
         int r = array.length - 1;
-        count = sort(array, 0, r);
+        count = 0;
+        sort(array, 0, r);
         return count;
     }
 
@@ -19,30 +21,31 @@ public class MergeSort {
      * @param l the left index
      * @param r the right index
      */
-    static int count = 0;
-    private static int sort(int[] arr, int l, int r) {
+    private static void sort(int[] arr, int l, int r) {
         if(arr == null || arr.length == 0) {
-            return count;
+            return;
         }
-        if (l >= r) {
-            return -1;
-        } else {
+        if (l < r) {
             // Find the middle point
             int m = l + (r - l) / 2;
 
             // Sort first and second halves
-            count = count + sort(arr, l, m);
-            count = count + sort(arr, m + 1, r);
+            sort(arr, l, m);
+            sort(arr, m + 1, r);
 
             // Merge the sorted halves
-            count = count + merge(arr, l, m, r);
+            merge(arr, l, m, r);
         }
-        return count;
     }
 
-    static int merge(int[] arr, int l, int m, int r) {
-        //count the number of inversions
-        int countM = 0;
+    /**
+     * method to merge two arrays
+     * @param arr the array to merge, which will be split
+     * @param l the left index
+     * @param m the middle index
+     * @param r the right index
+     */
+    private static void merge(int[] arr, int l, int m, int r) {
         //size of array
         int size = arr.length;
         if (size > 1) {
@@ -78,10 +81,9 @@ public class MergeSort {
                     arr[k] = R[j];
                     j++;
                     //count the number of inversions
-                    countM++;
+                    count += n1 - i;
                 }
-            }
-            /*This part is not needed, because the remaining elements are already sorted and therefore not inversions
+                     /*This part is not needed, because the remaining elements are already sorted and therefore not inversions
             // Copy remaining elements of L[] if any
             while (i < n1) {
                 arr[k] = L[i];
@@ -94,7 +96,25 @@ public class MergeSort {
                 j++;
                 k++;
             }*/
+            }
         }
-        return countM;
+    }
+
+    /**
+     * method to count the number of inversions in an array
+     * using the definition on the exercise sheet; like in example a)
+     * @param array
+     * @return number of inversions
+     */
+    public static int countAlternative(int[] array){
+        int count = 0;
+        for(int i = 0; i < array.length; i++){
+            for(int j = i+1; j < array.length; j++){
+                if(array[i] > array[j]){
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 }
