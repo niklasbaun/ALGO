@@ -115,29 +115,83 @@ public class ListSet<E extends Comparable<E>> implements Set<E>, Iterable<E> {
 	}
 
 	/**
-	 * what does this want to tell us?
+	 * method to unit two sets, one inserted and one given
 	 * @param set
 	 *            - the given set.
 	 */
 	@Override
 	public void union(Set<E> set) {
-		/*
-		 * TODO: 4.1 a)+b)
-		 */
+		//if the existing set is empty just copy the given set
+		if(head == null){
+			head = ((ListSet<E>) set).head;
+			return;
+		}
+		//if the given set is empty do nothing
+		else if(set.isEmpty()){
+			return;
+		}
+		//if both contain elements compare and insert elements not already in the existing set
+		else{
+			SetNode<E> node = ((ListSet<E>) set).head;
+			while(node != null){
+				if(!contains(node.item)){
+					add(node.item);
+				}
+				node = node.next;
+			}
+		}
 	}
+
+	/**
+	 * method to find the intersection of two sets, one inserted and one given
+	 * @param set
+	 *            - the given set.
+	 */
 
 	@Override
 	public void intersect(Set<E> set) {
-		/*
-		 * TODO: 4.1 a)
-		 */
+		//if the existing set is empty do nothing
+		if(head == null){
+			return;
+		}
+		//if the given set is empty clear the existing set
+		else if(set.isEmpty()){
+			head = null;
+			return;
+		}
+		//else compare and remove elements not in the given set
+		else{
+			SetNode<E> node = head;
+			while(node != null){
+				if(!set.contains(node.item)){
+					remove(node.item);
+				}
+				node = node.next;
+			}
+		}
 	}
 
+	/**
+	 * method to remove all elements of the given set from the existing set
+	 * @param set
+	 *            - the given set.
+	 */
 	@Override
 	public void subtract(Set<E> set) {
-		/*
-		 * TODO: 4.1 a)
-		 */
+		//if the existing  or the given is empty do nothing
+		if(head == null || set.isEmpty()){
+			return;
+		}
+		//else remove
+		else{
+			SetNode<E> node = head;
+			while(node != null){
+				if(set.contains(node.item)){
+					remove(node.item);
+				}
+				node = node.next;
+			}
+		}
 	}
 
 	/**
