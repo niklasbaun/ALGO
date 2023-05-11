@@ -1,17 +1,17 @@
-// TODO: Add Interface (3.3 b))
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
 
 public class COLAImpl<E extends Comparable<E>> implements Insert<E>, Query<E> {
 
-    // TODO: Add data representation (3.3 a))
     //List of arrays to represent the COLA
     private ArrayList<E[]> cola = new ArrayList<E[]>();
     //List of booleans to represent if the array is empty
     private ArrayList<Boolean> empty = new ArrayList<Boolean>();
 
+    /**
+     * method to insert a new element into the COLA
+     * @param key The element
+     */
     public void insertElement(E key) {
         //arrayList to save the overflow
         ArrayList<E> overflow = new ArrayList<E>();
@@ -165,8 +165,6 @@ public class COLAImpl<E extends Comparable<E>> implements Insert<E>, Query<E> {
             }
         }
     }
-
-    // TODO: Implement search methods (3.3 b))
 
     /**
      * Searches the element with a top-down algorithm, i.e.,

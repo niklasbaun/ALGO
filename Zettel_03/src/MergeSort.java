@@ -21,9 +21,9 @@ public class MergeSort{
      * @param l the left index
      * @param r the right index
      */
-    private static void sort(int[] arr, int l, int r) {
+    private static int sort(int[] arr, int l, int r) {
         if(arr == null || arr.length == 0) {
-            return;
+            return count;
         }
         if (l < r) {
             // Find the middle point
@@ -34,8 +34,9 @@ public class MergeSort{
             sort(arr, m + 1, r);
 
             // Merge the sorted halves
-            merge(arr, l, m, r);
+            count += merge(arr, l, m, r);
         }
+        return count;
     }
 
     /**
@@ -45,7 +46,8 @@ public class MergeSort{
      * @param m the middle index
      * @param r the right index
      */
-    private static void merge(int[] arr, int l, int m, int r) {
+    private static int merge(int[] arr, int l, int m, int r) {
+        int inv = 0;
         //size of array
         int size = arr.length;
         if (size > 1) {
@@ -81,10 +83,10 @@ public class MergeSort{
                     arr[k] = R[j];
                     j++;
                     //count the number of inversions
-                    count += n1 - i;
+                    inv += n1 - i;
                 }
-                     /*This part is not needed, because the remaining elements are already sorted and therefore not inversions
-            // Copy remaining elements of L[] if any
+
+                 // Copy remaining elements of L[] if any
             while (i < n1) {
                 arr[k] = L[i];
                 i++;
@@ -95,9 +97,10 @@ public class MergeSort{
                 arr[k] = R[j];
                 j++;
                 k++;
-            }*/
+            }
             }
         }
+        return inv;
     }
 
     /**

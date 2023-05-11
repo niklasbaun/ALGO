@@ -41,13 +41,46 @@ class ListSetTest {
 
     @Test
     void union() {
+        ListSet<Integer> unionSet = new ListSet<>();
+        unionSet.add(5);
+        unionSet.add(6);
+        unionSet.add(7);
+        unionSet.add(8);
+        unionSet.add(9);
+        unionSet.add(10);
+        listSet.union(unionSet);
+        for(int i=0; i<10; i++){
+            assertEquals(true, listSet.contains(i+1));
+        }
     }
 
     @Test
     void intersect() {
+        ListSet<Integer> intersectSet = new ListSet<>();
+        intersectSet.add(3);
+        intersectSet.add(5);
+        intersectSet.add(7);
+        intersectSet.add(-1);
+        listSet.intersect(intersectSet);
+        //the two remaining elements
+        assertEquals(true, listSet.contains(3));
+        assertEquals(true, listSet.contains(5));
+        //test if an element from the inputted list would be there
+        assertEquals(false, listSet.contains(7));
+        //test if an element from the existing list is still there
+        assertEquals(false, listSet.contains(2));
     }
 
     @Test
     void subtract() {
+        ListSet<Integer> subtractSet = new ListSet<>();
+        subtractSet.add(3);
+        subtractSet.add(5);
+        listSet.subtract(subtractSet);
+        assertEquals(true, listSet.contains(1));
+        assertEquals(true, listSet.contains(2));
+        assertEquals(true, listSet.contains(4));
+        assertEquals(false, listSet.contains(3));
+        assertEquals(false, listSet.contains(5));
     }
 }
