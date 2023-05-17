@@ -2,6 +2,9 @@ import java.util.Iterator;
 
 public class ListSet<E extends Comparable<E>> implements Set<E>, Iterable<E> {
 
+	/**
+	 * Node class
+	 */
 	private static class SetNode<T> {
 		private T item;
 		private SetNode<T> next;
@@ -59,6 +62,7 @@ public class ListSet<E extends Comparable<E>> implements Set<E>, Iterable<E> {
 	 * @return the state of the operation if the element was removed from the set (true) or not (false)
 	 */
 	@Override
+
 	public boolean remove(E element) {
 		//if the set is empty nothing can be removed
 		if( head == null ){
