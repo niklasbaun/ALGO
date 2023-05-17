@@ -54,8 +54,13 @@ public class RandomSkipListImpl<E extends Comparable<E>> implements RandomSkipLi
      */
     @Override
     public boolean add(Comparable element) {
+        //check if list is empty
+        if(head == null){
+            head = new Node(element);
+            return true;
+        }
         // check if the element is already in the set
-        if( contains(element)){
+        if(contains(element)){
             return false;
         }
         //add the element

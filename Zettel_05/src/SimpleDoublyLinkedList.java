@@ -21,7 +21,7 @@ public class SimpleDoublyLinkedList<E> {
         tail = new Node<>(element, tail, null);
         if (head == null)
             head = tail;
-
+    
         if (tail.prev != null)
             tail.prev.next = tail;
     }
