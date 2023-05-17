@@ -147,6 +147,17 @@ public class ListSet<E extends Comparable<E>> implements Set<E>, Iterable<E> {
 	}
 
 	/**
+	 * method to unit two sets, one inserted and one given with O(n+m)
+	 * @param set
+	 */
+	public void union2(Set<E> set){
+		if(head == null){
+			head = ((ListSet<E>) set).head;
+			return;
+		}
+	}
+
+	/**
 	 * method to find the intersection of two sets, one inserted and one given
 	 * @param set
 	 *            - the given set.
