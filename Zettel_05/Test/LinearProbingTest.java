@@ -12,32 +12,18 @@ class LinearProbingTest {
      */
     @BeforeEach
     void setUp() {
-        linearProbing = new LinearProbing(10, new FixedRangeHashFunction() {
-            @Override
-            public int hash(Object e) {
-                return e.hashCode() % 10;
-            }
-
-            @Override
-            public int minHashValue() {
-                return 0;
-            }
-
-            @Override
-            public int maxHashValue() {
-                return 10;
-            }
-        });
+        ModuloHashFunc hashFunc = new ModuloHashFunc(10, 0);
+        linearProbing = new LinearProbing(10, hashFunc);
         }
 
     @Test
     void put() {
-        linearProbing.insert(1);
-        linearProbing.insert(2);
-        linearProbing.insert(11);
+        linearProbing.put(1, 5);
+        linearProbing.put(2, 7);
+        linearProbing.put(11, 3);
 
-        assertEquals(1, linearProbing.get(1));
-        assertEquals(2, linearProbing.get(2));
+        assertEquals(5, linearProbing.get(1));
+        assertEquals(7, linearProbing.get(2));
         assertEquals(3, linearProbing.get(11));
     }
 

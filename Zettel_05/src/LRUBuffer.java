@@ -1,4 +1,4 @@
-
+import java.util.HashMap;
 
 /**
  * A buffer based on the least recently used strategy.
@@ -12,10 +12,14 @@ public class LRUBuffer<Key, Value> {
      * The maximum size of the buffer. Once reached, an element will be replaced.
      */
     private final int capacity;
-    //TODO: Add data structures
+    private HashMap<Key, Value> hashMap;
+    private SimpleDoublyLinkedList<Key> list;
+
 
     public LRUBuffer(int capacity) {
         this.capacity = capacity;
+        hashMap = new HashMap<>();
+        list = new SimpleDoublyLinkedList<>();
         //TODO: Potentially adjust according to your implementation strategy.
     }
 
@@ -29,7 +33,25 @@ public class LRUBuffer<Key, Value> {
      * @return The value previously associated with key; null if the key is not present in the buffer.
      */
     public Value put(Key key, Value value) {
-        //TODO: Implement
+        //if capacity is at the limit
+        if(hashMap.size() == capacity) {
+            //if already in buffer
+            if (hashMap.containsKey(key)) {
+                Value temp = hashMap.get(key);
+                hashMap.put(key, value);
+                list.addFirst(key);
+                return temp;
+            }
+            Key temp = list.removeLast();
+            hashMap.remove(temp);
+            hashMap.put(key, value);
+            list.addFirst(key);
+        }
+        //if capacity is not at the limit
+        else {
+            hashMap.put(key, value);
+            list.addFirst(key);
+        }
         return null;
     }
 
@@ -41,8 +63,11 @@ public class LRUBuffer<Key, Value> {
      * @return The value associated with the key; null if the key is not present in the buffer.
      */
     public Value get(Key key) {
-        //TODO: Implement
+        //if key is in buffer
+        if (hashMap.containsKey(key)) {
+            return hashMap.get(key);
+        }
+        //if key is not in buffer
         return null;
     }
-
 }
