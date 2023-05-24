@@ -33,22 +33,29 @@ public class LRUBuffer<Key, Value> {
      * @return The value previously associated with key; null if the key is not present in the buffer.
      */
     public Value put(Key key, Value value) {
-        //if capacity is at the limit
-        if(hashMap.size() == capacity) {
+
             //if already in buffer
             if (hashMap.containsKey(key)) {
                 Value temp = hashMap.get(key);
+                //overwrite in hashmap
                 hashMap.put(key, value);
-                list.addFirst(key);
+                //return old value
                 return temp;
             }
+
+        //if capacity is at the limit
+        if(hashMap.size() == capacity) {
+            //remove last element
             Key temp = list.removeLast();
+            //remove from hashmap
             hashMap.remove(temp);
+            //add new
             hashMap.put(key, value);
             list.addFirst(key);
         }
         //if capacity is not at the limit
         else {
+            //just add
             hashMap.put(key, value);
             list.addFirst(key);
         }

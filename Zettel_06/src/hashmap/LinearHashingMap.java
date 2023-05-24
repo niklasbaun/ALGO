@@ -1,0 +1,188 @@
+package hashmap;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+/**
+ * This class implements a map that uses linear hashing to expand the underlying hash table
+ *
+ * @param <K>
+ * @param <V>
+ */
+public class LinearHashingMap<K, V> implements Map<K, V> {
+
+    private final int initialBucketCount;
+
+    private final double alphaMax;//max load factor
+
+    private final List<List<MapEntry<K, V>>> buckets;
+
+    private final HashFunction<K> hashFunction;
+
+    private int currentLevel = 0;
+
+    private int expansionPointer = 0;
+
+    private int numberOfElements;
+
+    private int numberOfBuckets;
+
+
+    public LinearHashingMap(final int initialBucketCount, double alphaMax, HashFunction<K> h) {
+        this.initialBucketCount = initialBucketCount;
+        this.alphaMax = alphaMax;
+
+        buckets = new ArrayList<>();
+
+        for (int i = 0; i < initialBucketCount; i++)
+            buckets.add(i, new LinkedList<MapEntry<K, V>>());
+
+        hashFunction = h;
+    }
+
+    /**
+     * get the address for the given key with respect to current level
+     *
+     * @param key
+     * @return the address for the given key with respect to current level
+     */
+    public int getAddress(K key) {
+        //check if the key is null
+        if (key == null)
+            throw new IllegalArgumentException("key must not be null");
+        //get the hash value of the key
+
+
+        //TODO hier muss noch mit pointer überorpft werden, welche hash angewendet wird
+        int hash = hashFunction.hash(key);
+        return hash % (int) Math.pow(2, currentLevel);
+    }
+
+    /**
+     * get the current alpha value, i.e. the current load factor
+     *
+     * @return the current alpha value
+     */
+    public double getAlpha() {
+        //get the number of elements in the hash table
+        int numberOfElements = 0;
+        for (List<MapEntry<K, V>> bucket : buckets) {
+            numberOfElements += bucket.size();
+        }
+        //return the number of elements divided by the number of buckets
+        return (double) numberOfElements / buckets.size();
+    }
+
+    /**
+     * check if number of elements in hash table exceeds threshold
+     *
+     * @return true if the hash table needs to be extended
+     */
+    public boolean checkOverflow() {
+        //check length of buckets
+        if (getAlpha() > alphaMax) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * expands the hash table
+     */
+    protected void split() {
+        //add new bucket to the end of the list while alpha is greater than alphaMax
+        while (getAlpha()>alphaMax){
+            //check if pointer is at the initial size
+            if (expansionPointer == initialBucketCount){
+                //one level was completed
+                currentLevel++;
+                //reset pointer
+                expansionPointer = 0;
+                //set new size
+                numberOfBuckets = initialBucketCount * (int) Math.pow(2, currentLevel);
+            }
+            buckets.add(new LinkedList<MapEntry<K, V>>());
+            //rehash all elements in the bucket with new hash function, which is double of old function
+            for (MapEntry<K, V> entry : buckets.get(expansionPointer)){
+                //get the new hash value
+                //how can the hash function be changed?
+                int hash = hashFunction.hash(entry.getKey());
+                //add the entry to the new bucket
+                buckets.get(hash).add(entry);
+            }
+            //increment pointer
+            expansionPointer++;
+        }
+    }
+
+
+    /**
+     * get the value for the given key
+     *
+     * @param key
+     * @return the value for the given key
+     */
+    public V get(K key) {
+        //check if the key is null
+        if (key == null) {
+            throw new IllegalArgumentException("key must not be null");
+        }
+        //get the address for the key
+        int address = getAddress(key);
+        //check if the address is not -1
+        if (address != -1) {
+            //return the value for the key
+            return buckets.get(address).get(address).getValue();
+        }
+        return null;
+    }
+
+    public void put(K key, V value) {
+        Iterator<MapEntry<K, V>> iterator = buckets.get(getAddress(key)).iterator();
+        MapEntry<K, V> next;
+        while (iterator.hasNext()) {
+            next = iterator.next();
+            if (next.getKey().equals(key)) {
+                next.setValue(value);
+                return;
+            }
+        }
+
+        buckets.get(getAddress(key)).add(new MapEntry<K, V>(key, value));
+
+        numberOfElements++;
+        if (checkOverflow()) split();
+        return;
+    }
+
+
+    public void remove(K key) {
+        Iterator<MapEntry<K, V>> iterator = buckets.get(getAddress(key)).iterator();
+        MapEntry<K, V> next;
+        while (iterator.hasNext()) {
+            next = iterator.next();
+            if (next.getKey().equals(key)) {
+                iterator.remove();
+                numberOfElements--;
+                break;
+            }
+        }
+        return;
+    }
+
+    public String toString() {
+        StringBuilder str = new StringBuilder();
+        for (Iterable<?> bucket : buckets) {
+            str.append('[');
+            for (Object entry : bucket)
+                str.append(entry);
+
+            str.append(']');
+        }
+
+        return str.toString();
+    }
+
+}
