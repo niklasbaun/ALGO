@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 public class RecursiveList<E> implements List<E>, Iterable<E> {
 
-    private static class ListNode<T> {
+    static class ListNode<T> {
         private T item;
         private ListNode<T> next;
 

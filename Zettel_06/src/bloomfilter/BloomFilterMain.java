@@ -1,5 +1,6 @@
 package bloomfilter;
 
+import list.BloomFilterList;
 import list.List;
 import list.RecursiveList;
 
@@ -11,8 +12,9 @@ public class BloomFilterMain {
     private static final int BUCKETS = 50_000;
 
     private static List<Integer> initBloomFilter(List<Integer> list) {
+        BloomFilterImpl<Integer> bloomFilter = new BloomFilterImpl<>(BUCKETS, HASHES);
+        return new BloomFilterList<>(list, bloomFilter);
         /*TODO: Initiate the BloomFilterList with your BloomFilter implementation, HashFunctions and the given list*/
-        return null;
     }
 
     public static void main(String[] args) {
