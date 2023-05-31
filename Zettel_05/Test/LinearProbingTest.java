@@ -12,22 +12,14 @@ class LinearProbingTest {
      */
     @BeforeEach
     void setUp() {
-        linearProbing = new LinearProbing(10, new FixedRangeHashFunction() {
+        //create FixedRangeHashFunction object
+        FixedRangeHashFunction fixed = new FixedRangeHashFunction() {
             @Override
-            public int hash(Object e) {
-                return e.hashCode() % 10;
-            }
+            public int hash(Object key) {
+                return key.hashCode() % 10; }
+        };
+        linearProbing = new LinearProbing(10, fixed);
 
-            @Override
-            public int minHashValue() {
-                return 0;
-            }
-
-            @Override
-            public int maxHashValue() {
-                return 10;
-            }
-        });
         }
 
     @Test
