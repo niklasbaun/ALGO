@@ -27,7 +27,9 @@ public class LinearHashingMap<K, V> implements Map<K, V> {
 
     private int numberOfElements;
 
+    //new variables, needed for further expension
     private int numberOfBuckets;
+
 
 
     public LinearHashingMap(final int initialBucketCount, double alphaMax, HashFunction<K> h) {
@@ -53,11 +55,15 @@ public class LinearHashingMap<K, V> implements Map<K, V> {
         if (key == null)
             throw new IllegalArgumentException("key must not be null");
         //get the hash value of the key
-
-
-        //TODO hier muss noch mit pointer überorpft werden, welche hash angewendet wird
         int hash = hashFunction.hash(key);
-        return hash % (int) Math.pow(2, currentLevel);
+        //if smaller than pointer then use hash1
+        if (hash < expansionPointer || hash > initialBucketCount) {
+            return  hashFunction.hash(key) + (int) Math.pow(2, currentLevel) * initialBucketCount;
+        }
+        //else use hash0
+        else {
+            return hashFunction.hash(key);
+        }
     }
 
     /**
@@ -66,13 +72,15 @@ public class LinearHashingMap<K, V> implements Map<K, V> {
      * @return the current alpha value
      */
     public double getAlpha() {
-        //get the number of elements in the hash table
+        //get the number of full buckets
         int numberOfElements = 0;
         for (List<MapEntry<K, V>> bucket : buckets) {
-            numberOfElements += bucket.size();
+            if (bucket.size() > 0) {
+                numberOfElements++;
+            }
         }
         //return the number of elements divided by the number of buckets
-        return (double) numberOfElements / buckets.size();
+        return numberOfElements / (double) numberOfBuckets;
     }
 
     /**
@@ -82,10 +90,7 @@ public class LinearHashingMap<K, V> implements Map<K, V> {
      */
     public boolean checkOverflow() {
         //check length of buckets
-        if (getAlpha() > alphaMax) {
-            return true;
-        }
-        return false;
+        return getAlpha() >= alphaMax;
     }
 
     /**
@@ -94,7 +99,7 @@ public class LinearHashingMap<K, V> implements Map<K, V> {
     protected void split() {
         //add new bucket to the end of the list while alpha is greater than alphaMax
         while (getAlpha()>alphaMax){
-            //check if pointer is at the initial size
+            //check if pointer is at the initial size; if yes than increase level
             if (expansionPointer == initialBucketCount){
                 //one level was completed
                 currentLevel++;
@@ -103,6 +108,7 @@ public class LinearHashingMap<K, V> implements Map<K, V> {
                 //set new size
                 numberOfBuckets = initialBucketCount * (int) Math.pow(2, currentLevel);
             }
+            //add new bucket
             buckets.add(new LinkedList<MapEntry<K, V>>());
             //rehash all elements in the bucket with new hash function, which is double of old function
             for (MapEntry<K, V> entry : buckets.get(expansionPointer)){
