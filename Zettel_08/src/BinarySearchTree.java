@@ -286,7 +286,28 @@ public class BinarySearchTree<K extends Comparable<? super K>> extends BinaryTre
 
 
     public static void main(String[] args) {
-        //TODO f)
+        //create new tree
+        BinarySearchTree<Integer> tree = new BinarySearchTree<>(5);
+        //add nodes
+        tree.add(3);
+        tree.add(7);
+        tree.add(2);
+        tree.add(4);
+        tree.add(6);
+        tree.add(8);
+        //search for example nodes
+        System.out.println(tree.search(5));
+        System.out.println(tree.search(3));
+        //remove example nodes
+        tree.remove(5);
+        tree.remove(3);
+        //search for example nodes
+        System.out.println(tree.search(5));
+        System.out.println(tree.search(3));
+
+
+
+
     }
 
 }
