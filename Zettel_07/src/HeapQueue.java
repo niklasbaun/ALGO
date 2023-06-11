@@ -14,6 +14,7 @@ public class HeapQueue<E> implements SimpleFIFOQueue<E> {
     }
 
     private PriorityQueue<Element<E>> priorityQueue;
+    private int capacity;
 
     /**
      * Creates a new HeapQueue object with the given maximum capacity.
@@ -26,6 +27,7 @@ public class HeapQueue<E> implements SimpleFIFOQueue<E> {
         }
         //create priority queue with maximumCapacity
         this.priorityQueue = new PriorityQueue<>(maximumCapacity);
+        this.capacity = maximumCapacity;
     }
 
     /**
@@ -34,6 +36,9 @@ public class HeapQueue<E> implements SimpleFIFOQueue<E> {
      */
     @Override
     public E poll() {
+        if (this.priorityQueue.isEmpty()) {
+            return null;
+        }
         E elem = (E) this.priorityQueue.poll();
         return elem;
     }
@@ -47,6 +52,10 @@ public class HeapQueue<E> implements SimpleFIFOQueue<E> {
         if (element == null) {
             throw new NullPointerException("Element must not be null.");
         }
+        //check if maximumcapacity is reached
+        if(this.priorityQueue.size()+1 == this.capacity) {
+            throw new IllegalStateException("Maximum capacity reached.");
+        }
         this.priorityQueue.add(new Element(element, this.priorityQueue.size()-1));
     }
 
@@ -55,6 +64,10 @@ public class HeapQueue<E> implements SimpleFIFOQueue<E> {
      * @return The element which, among all elements currently in this queue, was added first.
      */
     public E peek() {
+        //there are no elements in the queue
+        if (this.priorityQueue.isEmpty()) {
+            return null;
+        }
         E elem = (E) this.priorityQueue.peek();
         return elem;
     }
@@ -83,7 +96,6 @@ public class HeapQueue<E> implements SimpleFIFOQueue<E> {
      */
     @Override
     public int capacity() {
-
         return this.priorityQueue.size();
     }
 

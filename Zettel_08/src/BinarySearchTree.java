@@ -145,42 +145,75 @@ public class BinarySearchTree<K extends Comparable<? super K>> extends BinaryTre
             if (toDelete.getLeft() == null) {
                 //set toDelete to right subtree
                 toDelete = toDelete.getRight();
+                toDelete.right = null;
                 return true;
             } else {
                 //set toDelete to left subtree
                 toDelete = toDelete.getLeft();
+                toDelete.left = null;
                 return true;
             }
         }
         //if toDelete has two Children look at right subtree for smallest key
+        if(toDelete.getLeft() != null && toDelete.getRight() != null){
+            //find the biggest key in the left subtree
+            K newKey = toDelete.removeSymmetricPredecessor(toDelete);
+            //set new key
+            toDelete.key = newKey;
+            return true;
+        }
 
         return true;
     }
 
-
+    /**
+     * removes the symmetric predecessor of a node
+     *
+     * @param toDelete the node to delete
+     * @return the key of the symmetric predecessor
+     */
     private K removeSymmetricPredecessor(BinarySearchTree<K> toDelete) {
-        //TODO b)iii
-        return null;
+        //find biggestkey in left subtree
+        K biggestKey = toDelete.getLeft().getMaxKey();
+        return biggestKey;
     }
 
 
     /**
      * returns the min key of a tree
      *
-     * @return
+     * @return the min key
      */
     public K getMinKey() {
-        //TODO c)
+        //check if the key has subtree
+        if(this.left == null && this.right == null){
+            return this.key;
+        }
+        //check if the key has left subtree
+        if (this.left != null) {
+            //call method again on left subtree
+            BinarySearchTree<K> left = this.getLeft();
+            return left.getMinKey();
+        }
         return null;
     }
 
     /**
      * returns the max key of a tree
      *
-     * @return
+     * @return the max key
      */
     public K getMaxKey() {
-        //TODO c)
+        //check if the key has subtree
+        if(this.left == null && this.right == null){
+            return this.key;
+        }
+        //check if the key has right subtree
+        if (this.right != null) {
+            //call method again on right subtree
+            BinarySearchTree<K> right = this.getRight();
+            return right.getMaxKey();
+        }
         return null;
     }
 
@@ -191,7 +224,15 @@ public class BinarySearchTree<K extends Comparable<? super K>> extends BinaryTre
      * @return subtree of successor
      */
     public BinarySearchTree<K> getSuccessor(BinarySearchTree<K> key) {
-        //TODO d)
+        //key is null
+        if(key == null){
+            throw new IllegalArgumentException("key must not be null");
+        }
+        //check if key has right subtree
+        if(key.getRight() != null){
+            return key.getRight();
+        }
+        //check if key has no right subtree
         return null;
     }
 
@@ -202,7 +243,11 @@ public class BinarySearchTree<K extends Comparable<? super K>> extends BinaryTre
      * @return subtree of predecessor
      */
     public BinarySearchTree<K> getPredecessor(BinarySearchTree<K> key) {
-        //TODO d)
+        //key is null
+        if(key == null){
+            throw new IllegalArgumentException("key must not be null");
+        }
+      
         return null;
     }
 
@@ -210,10 +255,35 @@ public class BinarySearchTree<K extends Comparable<? super K>> extends BinaryTre
      * finds the max key y in the tree such that y<=x
      *
      * @param x
-     * @return
+     * @return the key
      */
     public K getMaxKey(K x) {
-        //TODO e)
+        //check if key is null
+        if(x == null){
+            throw new IllegalArgumentException("key must not be null");
+        }
+        //check if node is smaller than x
+        if(this.key.compareTo(x) < 0){
+            //check if right subtree is null
+            if(this.right == null){
+                return this.key;
+            }else{
+                //call method again on right subtree
+                BinarySearchTree<K> right = this.getRight();
+                return right.getMaxKey(x);
+            }
+        }
+        //check if node is bigger than x
+if(this.key.compareTo(x) > 0){
+            //check if left subtree is null
+            if(this.left == null){
+                return null;
+            }else{
+                //call method again on left subtree
+                BinarySearchTree<K> left = this.getLeft();
+                return left.getMaxKey(x);
+            }
+        }
         return null;
     }
 

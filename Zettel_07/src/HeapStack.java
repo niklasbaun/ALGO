@@ -14,7 +14,7 @@ public class HeapStack<E> implements SimpleStack<E> {
     }
     
     private PriorityQueue<Element<E>> priorityQueue;
-
+    private int capacity;
     /**
      * Creates a new HeapStack object with the given maximum capacity.
      * @param maximumCapacity
@@ -26,6 +26,7 @@ public class HeapStack<E> implements SimpleStack<E> {
         }
         //create priority queue with maximumCapacity
         this.priorityQueue = new PriorityQueue<>(maximumCapacity);
+        this.capacity = maximumCapacity;
     }
 
     /**
@@ -34,8 +35,10 @@ public class HeapStack<E> implements SimpleStack<E> {
      */
     @Override
     public E pop()  {
+        if (this.priorityQueue.isEmpty()) {
+            return null;
+        }
         E elem = (E) this.priorityQueue.poll();
-
         return elem;
     }
 
@@ -48,7 +51,10 @@ public class HeapStack<E> implements SimpleStack<E> {
         if (element == null) {
             throw new NullPointerException("Element must not be null.");
         }
-        this.priorityQueue.add(new Element(element, 0));
+        if(this.priorityQueue.size()+1 == this.capacity) {
+            throw new IllegalStateException("Maximum capacity reached.");
+        }
+        this.priorityQueue.add(new Element<>(element, 0));
     }
 
     /**
@@ -56,6 +62,9 @@ public class HeapStack<E> implements SimpleStack<E> {
      * @return The element on top of this stack.
      */
     public E peek() {
+        if (this.priorityQueue.isEmpty()) {
+            return null;
+        }
         E elem = (E) this.priorityQueue.peek();
         return elem;
     }
