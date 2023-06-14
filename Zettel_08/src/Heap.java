@@ -57,7 +57,12 @@ public class Heap<T> {
         // Copy array, leaving first position empty
         System.arraycopy(fromArray, 0, this.elements, 1, fromArray.length);
 
-        // TODO: a)
+        //heapify the array to restore the heap property
+        for (int i = this.number >> 1; i > 0; i--) {
+            this.downheap(i);
+        }
+        
+
     }
 
     /**
@@ -160,16 +165,25 @@ public class Heap<T> {
     /**
      * Finds the k-th smallest element using naive heap construction
      *
-     * @param elements
-     * @param k
+     * @param elements integer array of elements
+     * @param k       the k-th smallest element to find
      * @return k smallest element.
      */
     private static Integer findKSmallestNaive(Integer[] elements, int k) {
         if (k <= 0)
             throw new IllegalArgumentException("k must be >= 1");
 
-        // TODO: b)
-        return null;
+        //insert all elements into a heap
+        Heap<Integer> heap = new Heap<>(Integer::compare);
+        for (Integer element : elements) {
+            heap.add(element);
+        }
+        //loop k times and remove the top element
+        for (int i = 0; i < k - 1; i++) {
+            heap.remove();
+        }
+        //return the top element
+        return heap.peek();
     }
 
     /**
@@ -183,8 +197,14 @@ public class Heap<T> {
         if (k <= 0)
             throw new IllegalArgumentException("k must be >= 1");
 
-        // TODO: c)
-        return null;
+        //use the heap constructor to build a heap from the array
+        Heap<Integer> heap = new Heap<>(elems, Integer::compare);
+        //loop k times and remove the top element
+        for (int i = 0; i < k - 1; i++) {
+            heap.remove();
+        }
+        //return the top element
+        return heap.peek();
     }
 
     /**
@@ -198,8 +218,21 @@ public class Heap<T> {
         if (k <= 0)
             throw new IllegalArgumentException("k must be >= 1");
 
-        // TODO: d)
-        return null;
+        //use max heap method to build a heap from the array
+        //insert k elements into the heap
+        Heap<Integer> heap = new Heap<>(Integer::compare);
+        for (int i = 0; i < k; i++) {
+            heap.add(elems[i]);
+        }
+        //loop through the rest of the array foreach insert remove largest element
+        for (int i = k; i < elems.length; i++) {
+            if (elems[i] < heap.peek()) {
+                heap.remove();
+                heap.add(elems[i]);
+            }
+        }
+        //return the top element
+        return heap.peek();
     }
 
     public static void main(String[] args) {

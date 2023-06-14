@@ -303,14 +303,36 @@ public class BinarySearchTree<K extends Comparable<? super K>> extends BinaryTre
         tree.add(6);
         tree.add(8);
         //search for example nodes
+        System.out.println("Search if 5 and 3 are in tree");
         System.out.println(tree.search(5));
         System.out.println(tree.search(3));
         //remove example nodes
+        System.out.println("Remove 5 and 3 from tree");
         tree.remove(5);
         tree.remove(3);
         //search for example nodes
+        System.out.println("Search if 5 and 3 are in tree");
         System.out.println(tree.search(5));
         System.out.println(tree.search(3));
+        //remove one symmetric predecessor
+        System.out.println("Remove symmetric predecessor of 7");
+        System.out.println(tree.removeSymmetricPredecessor(tree.search(7)));
+        //search if symmetric predecessor is gone
+        System.out.println("Search if symmetric predecessor of 7 is gone");
+        System.out.println(tree.getPredecessor(tree.search(7)));
+
+        //look for max and min key
+        System.out.println("Max and Min Key of tree");
+        System.out.println(tree.getMaxKey());
+        System.out.println(tree.getMinKey());
+
+        //look for successor and predecessor
+        System.out.println("Successor and Predecessor of 4");
+        System.out.println(tree.getSuccessor(tree.search(4)));
+        System.out.println(tree.getPredecessor(tree.search(4)));
+
+        //look for max key smaller or equal to x
+        System.out.println(tree.getMaxKey(5));
 
 
 
