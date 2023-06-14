@@ -41,27 +41,74 @@ public class TwoThreeFourTree<K extends Comparable<K>> {
          * @return the SplitResult
          */
         SplitResult<K> split() {
-            // TODO
-            return null;
+            //create new sibling
+            Node<K> sibling = new Node<>();
+            //move last key and children to sibling
+            sibling.keys.add(keys.remove(3));
+            //remove median key and save it
+            K median = keys.remove(2);
+            return new SplitResult<>(sibling, median);
         }
 
         /**
-         * Insert a key into the tree.
+         * Insert a key into the node.
          *
-         * @param key The key to be inserted into the tree.
+         * @param key The key to be inserted into the node.
          */
         void insert(K key) {
-            // TODO
+            //check if key is null
+            if (key == null) {
+                throw new IllegalArgumentException("key cannot be null");
+            }
+            //check if key is already in node
+            if (contains(key)) {
+                return;
+            }
+            //insert key
+            int i = 0;
+            while (i < this.keys.size() && key.compareTo(this.keys.get(i)) > 0) {
+                i++;
+            }
+            this.keys.add(i, key);
+
         }
 
+            /**
+             * check if the node contains a key
+             * @param key the key to be checked
+             * @return true if the key is in the node
+             */
         boolean contains(K key) {
-            // TODO
+            //check if key is null
+            if (key == null) {
+                throw new IllegalArgumentException("key cannot be null");
+            }
+            //check if key is in node
+            int i = 0;
+            while (i < keys.size() && key.compareTo(keys.get(i)) > 0) {
+                i++;
+                if (i < keys.size() && key.compareTo(keys.get(i)) == 0) {
+                    return true;
+                }
+            }
             return false;
         }
 
+        /**
+         * method to return an ordered list of all elements in the tree
+         * @return an ordered list of all elements in the tree
+         */
         List<K> inOrder() {
-            // TODO
-            return null;
+            //create list
+            List<K> list = new ArrayList<>();
+            //return empty list if node is empty
+            if (keys.isEmpty()) {
+                return list;
+            }
+            //add all keys into List
+            list.addAll(this.keys);
+            //return list
+            return list;
         }
 
         @Override
@@ -82,10 +129,33 @@ public class TwoThreeFourTree<K extends Comparable<K>> {
      * @param key The key to be inserted into the tree.
      */
     public void insert(K key) {
-        // TODO: implement Node.insert
-        root.insert(key);
-
-        // TODO: check for overflow and fix it, if necessary
+        //navigate to appropriate leaf
+        Node<K> current = this.root;
+        Node<K> parent = null;
+        while (!current.isLeaf()) {
+            //find child to go to
+            int i = 0;
+            while (i < current.keys.size() && key.compareTo(current.keys.get(i)) > 0) {
+                i++;
+            }
+            current = current.children.get(i);
+            parent = current;
+        }
+        //insert key into leaf
+        current.insert(key);
+        //check if leaf would overflow
+        if (current.isOverFlow()) {
+            //split leaf
+            SplitResult<K> split = current.split();
+            //insert median key into parent
+            //if parent is null, create new root
+            if (parent == null) {
+                parent = new Node<>();
+                parent.children.add(current);
+                this.root = parent;
+            }
+            parent.insert(split.key);
+        }
     }
 
     /**
@@ -95,8 +165,33 @@ public class TwoThreeFourTree<K extends Comparable<K>> {
      * @return true, if key is contained in the tree.
      */
     public boolean contains(K key) {
-        // TODO: implement Node.contains
-        return root.contains(key);
+        //check if key is null
+        if (key == null) {
+            throw new IllegalArgumentException("key cannot be null");
+        }
+        //check if root is empty
+        if (root.keys.isEmpty()) {
+            return false;
+        }
+        //check if key is in root
+        if(root.contains(key)){
+            return true;
+        }
+        //navigate to appropriate leaf
+        Node<K> current = this.root;
+        while (!current.isLeaf()) {
+            //find child to go to
+            int i = 0;
+            while (i < current.keys.size() && key.compareTo(current.keys.get(i)) > 0) {
+                i++;
+                //check if key is in node
+                if(i < current.keys.size() && key.compareTo(current.keys.get(i)) == 0){
+                    return true;
+                }
+            }
+            current = current.children.get(i);
+        }
+        return false;
     }
 
     /**
@@ -105,8 +200,14 @@ public class TwoThreeFourTree<K extends Comparable<K>> {
      * @return The minimal element in the tree.
      */
     public K getMin() {
-        // TODO
-        return null;
+        //find minimal element
+        Node<K> current = this.root;
+        //navigate to minimal leaf
+        while (!current.isLeaf()) {
+            current = current.children.get(0);
+        }
+        //return minimal element
+        return current.keys.get(0);
     }
 
     /**
@@ -115,8 +216,14 @@ public class TwoThreeFourTree<K extends Comparable<K>> {
      * @return The maximal element in the tree.
      */
     public K getMax() {
-        // TODO
-        return null;
+        //find maximal element
+        Node<K> current = this.root;
+        //navigate to maximal leaf
+        while (!current.isLeaf()) {
+            current = current.children.get(current.children.size() - 1);
+        }
+        //return maximal element
+        return current.keys.get(current.keys.size() - 1);
     }
 
     /**
@@ -125,7 +232,16 @@ public class TwoThreeFourTree<K extends Comparable<K>> {
      * @return An ordered list of all elements in the tree
      */
     public List<K> inOrder() {
-        // TODO: implement Node.inOrder
+        //create list
+        ArrayList<K> list = new ArrayList<>();
+        //return empty list if root is empty
+        if (root.keys.isEmpty()) {
+            return list;
+        }
+        //return list of all elements in tree
+        //start with minimal element
+
+
         return root.inOrder();
     }
 
