@@ -129,32 +129,45 @@ public class TwoThreeFourTree<K extends Comparable<K>> {
      * @param key The key to be inserted into the tree.
      */
     public void insert(K key) {
-        //navigate to appropriate leaf
-        Node<K> current = this.root;
-        Node<K> parent = null;
-        while (!current.isLeaf()) {
-            //find child to go to
-            int i = 0;
-            while (i < current.keys.size() && key.compareTo(current.keys.get(i)) > 0) {
-                i++;
-            }
-            current = current.children.get(i);
-            parent = current;
+        //check if key is null
+        if (key == null) {
+            throw new IllegalArgumentException("key cannot be null");
         }
-        //insert key into leaf
-        current.insert(key);
-        //check if leaf would overflow
-        if (current.isOverFlow()) {
-            //split leaf
-            SplitResult<K> split = current.split();
-            //insert median key into parent
-            //if parent is null, create new root
-            if (parent == null) {
-                parent = new Node<>();
-                parent.children.add(current);
-                this.root = parent;
+        //check if root is empty
+        if (root.keys.isEmpty()) {
+            root.insert(key);
+            return;
+        } else {
+            //check if key is already in root
+            if (root.contains(key)) {
+                return;
             }
-            parent.insert(split.key);
+            //navigate to leaf
+            Node<K> current = this.root;
+            while (!current.isLeaf()) {
+                //find child to go to
+                int i = 0;
+                while (i < current.keys.size() && key.compareTo(current.keys.get(i)) > 0) {
+                    i++;
+                }
+                current = current.children.get(i);
+            }
+            //insert key into leaf
+            current.insert(key);
+            //check if leaf is overflowing
+            if (current.isOverFlow()) {
+                //split leaf
+                SplitResult<K> split = current.split();
+                //create new root
+                Node<K> newRoot = new Node<>();
+                //add median key to new root
+                newRoot.insert(split.key);
+                //add old leaf and new sibling to new root
+                newRoot.children.add(current);
+                newRoot.children.add(split.sibling);
+                //set new root as root
+                this.root = newRoot;
+            }
         }
     }
 
@@ -238,10 +251,37 @@ public class TwoThreeFourTree<K extends Comparable<K>> {
         if (root.keys.isEmpty()) {
             return list;
         }
-        //return list of all elements in tree
-        //start with minimal element
-
-
+        //check if root has children
+        if(root.children != null){
+            //return list of all elements in tree
+            //check if child at pos 0 exists
+            for(int i = 0; i < root.children.size(); i++){
+                switch (i){
+                    case 0:
+                        //add all elements in child at pos 0
+                        list.addAll(root.children.get(0).inOrder());
+                        break;
+                    case 1:
+                        //add all elements in child at pos 1
+                        list.add(root.keys.get(0));
+                        list.addAll(root.children.get(1).inOrder());
+                        break;
+                    case 2:
+                        //add all elements in child at pos 2
+                        list.add(root.keys.get(1));
+                        list.addAll(root.children.get(2).inOrder());
+                        break;
+                    case 3:
+                        //add all elements in child at pos 3
+                        list.add(root.keys.get(2));
+                        list.addAll(root.children.get(3).inOrder());
+                        break;
+                }
+            }
+        } else {
+            //add all elements in root
+            list.addAll(root.inOrder());
+        }
         return root.inOrder();
     }
 

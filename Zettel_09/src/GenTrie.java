@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class GenTrie {
     private final GenTrie[] children;
     private boolean end;
@@ -11,16 +13,48 @@ public class GenTrie {
      * Translates 'A' -> 0, 'B' -> 1, 'C' -> 2, 'T' -> 3
      */
     private static int charToIndex(char c) {
-        // TODO
-        return 0;
+        //take the char and translate it to an int
+        //check if the char is valid or not
+        switch (c) {
+            case 'A' -> {
+                return 0;
+            }
+            case 'C' -> {
+                return 1;
+            }
+            case 'G' -> {
+                return 2;
+            }
+            case 'T' -> {
+                return 3;
+            }
+        }
+        //if not throw an exception
+        throw new IllegalArgumentException("char is not valid");
     }
 
     /**
      * Translates 0 -> 'A', 1 -> 'C', 2 -> 'G', 3 -> 'T'
      */
     private static char indexToChar(int index) {
-        // TODO
-        return 'A';
+        //take the int and translate it to a char
+        //check if the int is valid or not
+        switch (index) {
+            case 0 -> {
+                return 'A';
+            }
+            case 1 -> {
+                return 'C';
+            }
+            case 2 -> {
+                return 'G';
+            }
+            case 3 -> {
+                return 'T';
+            }
+        }
+        //if not throw an exception
+        throw new IllegalArgumentException("int is not valid");
     }
 
     /**
@@ -46,10 +80,31 @@ public class GenTrie {
      * @param seq The gene sequence.
      */
     public void insert(String seq) {
+        //check if seq is null
         if (seq.length() == 0) {
             throw new IllegalArgumentException("cannot insert an empty sequence");
         }
-        // TODO
+        //create temp trie
+        GenTrie temp = this;
+        //split String into char array
+        char[] seqArray = seq.toCharArray();
+        //insert the char array into the trie
+        for (int i = 0; i < seqArray.length; i++) {
+            //check if the char is valid
+            if (charToIndex(seqArray[i]) == -1) {
+                throw new IllegalArgumentException("char is not valid");
+            }
+            //check if the char is already in the trie
+            if (temp.children[charToIndex(seqArray[i])] == null) {
+                //if not create a new trie
+                temp.children[charToIndex(seqArray[i])] = new GenTrie();
+            } else {
+                //if yes go to that trie
+                temp = temp.children[charToIndex(seqArray[i])];
+            }
+        }
+        //set the end marker
+        temp.end = true;
     }
 
     /**
@@ -59,8 +114,29 @@ public class GenTrie {
      * @return true, if this trie contains s
      */
     public boolean contains(String seq) {
-        // TODO
-        return false;
+        //check if seq is null
+        if (seq.length() == 0) {
+            throw new IllegalArgumentException("cannot insert an empty sequence");
+        }
+        //create temp trie
+        GenTrie temp = this;
+        //split String into char array
+        char[] seqArray = seq.toCharArray();
+        //check if the char array is in the trie
+        for (int i = 0; i < seqArray.length; i++) {
+            //check if the char is valid
+            if (charToIndex(seqArray[i]) == -1) {
+                throw new IllegalArgumentException("char is not valid");
+            }
+            //check if the char is already in the trie
+            if (temp.children[charToIndex(seqArray[i])] == null) {
+                return false;
+            } else {
+                //if yes go to that trie
+                temp = temp.children[charToIndex(seqArray[i])];
+            }
+        }
+        return true;
     }
 
     /**
@@ -69,14 +145,40 @@ public class GenTrie {
      * @param seq The sequence.
      */
     public void remove(String seq) {
-        // TODO
+        //check if seq is null
+        if (seq.length() == 0) {
+            throw new IllegalArgumentException("cannot insert an empty sequence");
+        }
+        //create temp trie
+        GenTrie temp = this;
+        //split String into char array
+        char[] seqArray = seq.toCharArray();
+
     }
 
     /**
      * Print all contained gene sequences in lexicographical order.
      */
     public void print() {
-        // TODO
+        //create a list of all the sequences
+        ArrayList<String> sequences = new ArrayList<>();
+        //create a string to store the sequence
+        String seq = "";
+        //start from the root and go through all the children till an end marker is found
+        for (int i = 0; i < 4; i++) {
+            //check if the child is null
+            if (children[i] != null) {
+                //if not add the char to the sequence
+                seq += indexToChar(i);
+                //check if the child has an end marker
+                if (children[i].end) {
+                    //if yes add the sequence to the list
+                    sequences.add(seq);
+                }
+                //if not go to the next child
+                children[i].print();
+            }
+        }
     }
 
     public static void main(String[] args) {
