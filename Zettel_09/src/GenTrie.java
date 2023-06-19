@@ -128,7 +128,7 @@ public class GenTrie {
             if (charToIndex(seqArray[i]) == -1) {
                 throw new IllegalArgumentException("char is not valid");
             }
-            //check if the char is already in the trie
+            //check if the char is not in the trie
             if (temp.children[charToIndex(seqArray[i])] == null) {
                 return false;
             } else {
@@ -149,11 +149,37 @@ public class GenTrie {
         if (seq.length() == 0) {
             throw new IllegalArgumentException("cannot insert an empty sequence");
         }
-        //create temp trie
-        GenTrie temp = this;
-        //split String into char array
-        char[] seqArray = seq.toCharArray();
 
+    }
+    /**
+     * helper function to remove a gene sequence from the trie.
+     * @param seq The sequence.
+     * @param temp the current trie
+     * @param index the index of the char array
+     */
+    private void removeHelper(String seq, GenTrie temp, int index) {
+        if (temp == null) {
+            return;
+        }
+        if(index == seq.length()){
+            //remove end marker
+            if(temp.end){
+                temp.end = false;
+            }
+            //check if node is not prefix of another sequence
+            if(temp.isEmpty()){
+                temp = null;
+            }
+            return;
+        }
+        //if not the last char go to the next trie
+        removeHelper(seq, temp.children[charToIndex(seq.charAt(index))], index + 1);
+
+        //if root has no children and is not end of word delete it
+        if(temp.isEmpty() && !temp.end){
+            temp = null;
+        }
+        return;
     }
 
     /**
@@ -178,6 +204,10 @@ public class GenTrie {
                 //if not go to the next child
                 children[i].print();
             }
+        }
+        //print the list
+        for (int i = 0; i < sequences.size(); i++) {
+            System.out.println(sequences.get(i));
         }
     }
 
